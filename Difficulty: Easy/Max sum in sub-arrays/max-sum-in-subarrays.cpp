@@ -11,11 +11,8 @@ class Solution {
   public:
     long long pairWithMaxSum(long long arr[], long long N) {
         // Your code goes here
-        
-        int mn1 = INT_MAX;
-        int mn2 = INT_MAX;
         long long sum = INT_MIN;
-        for(long long i=1;i<N;i++){
+        for(int i=1;i<N;i++){
             long long currsum = arr[i] + arr[i-1];
             sum = max(sum,currsum);
         }
