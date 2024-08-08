@@ -9,46 +9,51 @@ using namespace std;
 
 class Solution{
     public:
-    
-    void toposort(int src ,int vis[] , vector<int> adj[] , stack<int> &st){
-        vis[src] = 1;
-        for(auto it: adj[src]) {
-            if(!vis[it]) {
-                toposort(it,vis,adj,st);
-            }
-        }
-        st.push(src);
-    }
-    
     string findOrder(string dict[], int N, int K) {
         //code here
-        vector<int> adj[K];
-        for(int i=0;i<N-1;i++){
-            string s1 = dict[i];
-            string s2 = dict[i+1];
-            
-            int len = min(s1.size(),s2.size());
-            for(int i=0;i<len;i++){
-                if(s1[i]!=s2[i]){
-                    adj[s1[i]-'a'].push_back(s2[i]-'a');
-                    break;
-                }
-            }
+       vector<int> adj[K];  // Corrected size of adj to K
+vector<int> indegree(K, 0);
+for (int i = 0; i < N - 1; i++) {
+    string s1 = dict[i];
+    string s2 = dict[i + 1];
+    int len = min(s1.length(), s2.length());
+    
+    bool foundDifference = false; // To track if we have found a difference in the current pair
+    for (int j = 0; j < len; j++) {
+        if (s1[j] != s2[j]) {
+            adj[s1[j] - 'a'].push_back(s2[j] - 'a');
+            indegree[s2[j] - 'a']++;
+            foundDifference = true;
+            break;
         }
-        stack<int> st;
-        int vis[K] = {0};
-        for(int i=0;i<K;i++){
-            if(!vis[i]){
-                toposort(i,vis,adj,st);
-            }
-        }
-        string ans;
-        while(!st.empty()){
-            ans += char(st.top() + 'a');
-            st.pop();
-        }
-        
-        return ans;
+    }
+
+    // Check for the prefix case
+    if (!foundDifference && s1.length() > s2.length()) {
+        return "";  // Invalid input case
+    }
+}
+
+vector<int> ans;
+queue<int> q;
+for (int i = 0; i < K; i++) {
+    if (indegree[i] == 0) q.push(i);
+}
+while (!q.empty()) {
+    int node = q.front();
+    q.pop();
+    ans.push_back(node);
+    for (auto it : adj[node]) {
+        indegree[it]--;
+        if (indegree[it] == 0) q.push(it);
+    }
+}
+string ansstr;
+for (auto it : ans) {
+    ansstr += char(it + 'a');
+}
+return ansstr;
+
     }
 };
 
