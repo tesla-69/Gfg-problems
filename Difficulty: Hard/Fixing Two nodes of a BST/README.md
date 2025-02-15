@@ -1,6 +1,6 @@
 <h2><a href="https://www.geeksforgeeks.org/problems/fixed-two-nodes-of-a-bst/1">Fixing Two nodes of a BST</a></h2><h3>Difficulty Level : Difficulty: Hard</h3><hr><div class="problems_problem_content__Xm_eO"><div>
 <div><span style="font-size: 18px;">Given the&nbsp;<strong>root</strong>&nbsp;of a Binary search tree(BST), where&nbsp;<strong>exactly t</strong></span><span style="font-size: 18px;"><strong>wo&nbsp;</strong>nodes were swapped by mistake. Your task is to fix (or correct) the BST by swapping them back. Do not change the structure of the tree.</span></div>
-<div><span style="font-size: 18px;"><strong>Note:</strong>&nbsp;It is guaranteed that the given input will form BST, except for 2 nodes that will be wrong. All changes must be reflected in the original linked list.</span></div>
+<div><span style="font-size: 18px;"><strong>Note:</strong> It is guaranteed that the given input will form BST, except for 2 nodes that will be wrong. All changes must be reflected in the original Binary search tree(BST).</span></div>
 </div>
 <div>&nbsp;</div>
 <div><span style="font-size: 18px;"><strong>Examples :</strong></span></div>
