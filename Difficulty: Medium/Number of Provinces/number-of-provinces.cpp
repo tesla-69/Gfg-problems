@@ -8,34 +8,31 @@ using namespace std;
 
 class Solution {
   public:
-    
-    void dfs(vector<int> adj[] , int vis[] , int node){
+    void dfs(vector<vector<int>>adjls, int node, int vis[]){
         vis[node] = 1;
-        for(auto it : adj[node]) {
-            if(!vis[it]) {
-                dfs(adj , vis , it);
-            }
+        for(auto it : adjls[node]) {
+            if(!vis[it]) dfs(adjls, it, vis);
         }
     }
-    
     int numProvinces(vector<vector<int>> adj, int V) {
         // code here
-        vector<int> adjls[V];
-        for(int i=0;i<V;i++) {
-            for(int j=0;j<V;j++){
-                if(adj[i][j] == 1 && i!=j){
+        int n = V;
+        vector<vector<int>> adjls(n);
+        for(int i = 0; i< n; i++) {
+            for(int j =0; j<n ;j++){
+                if(adj[i][j] == 1) {
                     adjls[i].push_back(j);
                     adjls[j].push_back(i);
                 }
             }
         }
-        int vis[V] ={0} ;
-        int cnt =0 ;
-        for(int i=0;i<V;i++){
+        int vis[n] = {0};
+        int cnt = 0;
+        for(int i =0; i<n; i++){
             if(!vis[i]){
+                dfs(adjls, i, vis);
                 cnt++;
-                dfs(adjls , vis , i);
-            }
+            } 
         }
         return cnt;
     }
@@ -66,7 +63,9 @@ int main() {
 
         Solution ob;
         cout << ob.numProvinces(adj,V) << endl;
-    }
+    
+cout << "~" << "\n";
+}
     return 0;
 }
 // } Driver Code Ends
