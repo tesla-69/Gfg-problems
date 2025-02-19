@@ -4,125 +4,115 @@
 using namespace std;
 
 // A Linked List node
-struct Node
-{
-	int data;
-	Node* next;
-	
-	Node(int x){
-	    data = x;
-	    next = NULL;
-	}
-	
+struct Node {
+    int data;
+    Node* next;
+
+    Node(int x) {
+        data = x;
+        next = NULL;
+    }
 };
 
 /* Function to print nodes in a given linked list */
-void printList(Node* node)
-{
-	while (node != NULL)
-	{
-		printf("%d ", node->data);
-		node = node->next;
-	}
-	cout<<endl;
+void printList(Node* node) {
+    while (node != NULL) {
+        printf("%d ", node->data);
+        node = node->next;
+    }
+    cout << endl;
 }
+
 
 // } Driver Code Ends
 /*Linked list Node structure
 
 struct Node
 {
-	int data;
-	Node* next;
-	
-	Node(int x){
-	    data = x;
-	    next = NULL;
-	}
-	
-};
-*/ 
+    int data;
+    Node* next;
 
-class compare{
-    public :
-        bool operator() (Node*a , Node*b) {
-            return a->data > b->data;
-        }
-};
-
-class Solution{
-  public:
-    //Function to merge K sorted linked list.
-    Node * mergeKLists(Node *arr[], int K)
-    {
-           // Your code here
-           priority_queue<Node* , vector<Node*> , compare > pq;
-        int n = K;
-        if(n == 0) return NULL;
-        for(int i=0; i< n ;i++) {
-            if(arr[i] != NULL) {
-                pq.push(arr[i]);
-            }
-        }
-        Node* head = NULL;
-        Node* tail = NULL;
-        while(!pq.empty()){
-            if(head == NULL) {
-                head = pq.top();
-                tail = pq.top();
-                pq.pop();
-                if(head->next != NULL) pq.push(head->next);
-            }
-            else {
-                tail->next = pq.top();
-                pq.pop();
-                tail = tail->next;
-                if(tail->next != NULL) pq.push(tail->next);
-            }
-        }
-        return head;
+    Node(int x){
+        data = x;
+        next = NULL;
     }
-};
 
+};
+*/
+
+class Solution {
+  public:
+    void putData(Node* r,vector<int> &v){
+        if(!r)
+            return;
+        v.push_back(r->data);
+        putData(r->next,v);
+        return;
+        
+    }
+    Node* convertAtoL(int i,int n,vector<int> &arr){
+        if(i==n)      
+            return NULL;
+        Node* temp = new Node(arr[i]);
+        temp->next = convertAtoL(i+1,n,arr);
+        return temp;    
+    }
+  
+    Node* mergeKLists(vector<Node*>& arr) {
+        // Your code here
+        vector<int> allData;
+        int n=arr.size();
+        for(int i=0;i<n;i++){
+            putData(arr[i],allData);
+        }
+        
+        sort(allData.begin(),allData.end());
+        
+        int nn=allData.size();
+        return convertAtoL(0,nn,allData);
+        
+        
+    }
+
+};
 
 
 //{ Driver Code Starts.
-// Driver program to test above functions
-int main()
-{
-   int t;
-   cin>>t;
-   while(t--)
-   {
-	   int N;
-	   cin>>N;
-       struct Node *arr[N];
-       for(int j=0;j<N;j++)
-        {
-           int n;
-           cin>>n;
 
-           int x;
-           cin>>x;
-           arr[j]=new Node(x);
-           Node *curr = arr[j];
-           n--;
+// Driver program to test the above functions
+int main() {
+    int t;
+    cin >> t;
+    cin.ignore();
+    while (t--) {
+        int n;
+        cin >> n;
+        cin.ignore();
 
-           for(int i=0;i<n;i++)
-           {
-               cin>>x;
-               Node *temp = new Node(x);
-               curr->next =temp;
-               curr=temp;
-           }
-   		}
-   		Solution obj;
-   		Node *res = obj.mergeKLists(arr,N);
-		printList(res);
+        vector<Node*> v(n);
 
-   }
+        for (int i = 0; i < n; i++) {
+            string line;
+            getline(cin, line);
+            stringstream ss(line);
 
-	return 0;
+            Node* head = new Node(0);
+            Node* temp = head;
+            int x;
+            while (ss >> x) {
+                Node* newNode = new Node(x);
+                temp->next = newNode;
+                temp = temp->next;
+            }
+            v[i] = head->next;
+        }
+
+        Solution ob;
+        Node* head = ob.mergeKLists(v);
+        printList(head);
+    }
+
+    return 0;
 }
 
 // } Driver Code Ends
