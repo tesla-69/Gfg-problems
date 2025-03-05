@@ -7,25 +7,25 @@ using namespace std;
 
 class Solution {
   public:
-    int dp[1005];
-    int fn(vector<int>&a, int i){
-        if(i>=a.size())return 0;
-        if(dp[i]!=-1)return dp[i];
-        int ans=1;
-        for(int j=i;j<a.size();j++){
-            if(a[j]>a[i])ans=max(ans,fn(a,j)+1);
+    int lis(vector<int>& arr) {
+        // code here
+        vector<int> temp;
+        int len = 1;
+        temp.push_back(arr[0]);
+        for(int i = 1; i < arr.size(); i++) {
+            if(arr[i] > temp.back()) {
+                temp.push_back(arr[i]);
+                len++;
+            }
+            else {
+                int ind = lower_bound(temp.begin(), temp.end(), arr[i]) - temp.begin();
+                temp[ind] = arr[i];
+            }
         }
-        return dp[i]=ans;
-    }
-    int lis(vector<int>& a) {
-        int ans=0;
-        memset(dp,-1,sizeof(dp));
-        for(int i=0;i<a.size();i++){
-            ans=max(ans,fn(a,i));
-        }
-        return ans;
+        return len;
     }
 };
+
 
 //{ Driver Code Starts.
 
