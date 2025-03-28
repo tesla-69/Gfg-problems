@@ -13,20 +13,25 @@ class Solution {
         // Your code here
         
         int n=arr.size();
-        vector<int>dp(2360,0);
-        for(int i=0;i<n;i++)
-        {
-            int x=arr[i];
-            int y=dep[i];
-            dp[x]++;
-            dp[y+1]--;
+        int cnt = 0;
+        sort(arr.begin(), arr.end());
+        sort(dep.begin(), dep.end());
+        int i = 0;
+        int j = 0;
+        int ans = 0;
+        while(i < n && j < n) {
+            if(arr[i] <= dep[j]) {
+                cnt++;
+                i++;
+            }
+            else {
+                cnt--;
+                j++;
+            }
+            ans = max(ans, cnt);
         }
-        int ans=0;
-        for(int i=1;i<2360;i++)
-        {
-            dp[i]=dp[i-1]+dp[i];
-            ans=max(ans,dp[i]);
-        }
+        ans = max(ans, cnt);
+        
         return ans;
         
     }
