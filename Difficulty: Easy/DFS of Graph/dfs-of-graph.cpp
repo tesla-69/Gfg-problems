@@ -4,49 +4,59 @@ using namespace std;
 
 
 // } Driver Code Ends
+
 class Solution {
   private: 
-    void dfs(vector<vector<int>> &adj , vector<int> &vis , vector<int> &ans , int node){
-        if(!vis[node]) ans.push_back(node);
+    void solve(int node, vector<vector<int>>& adj,vector<int>& vis, vector<int>& ans) {
         vis[node] = 1;
-        for(auto it : adj[node]) {
-            if(!vis[it])
-            dfs(adj,vis,ans,it);
+        ans.push_back(node);
+        for(auto it: adj[node]) {
+            if(!vis[it]) solve(it, adj, vis, ans);
         }
     }
   public:
-    // Function to return a list containing the DFS traversal of the graph.
-    vector<int> dfsOfGraph(vector<vector<int>>& adj) {
+    vector<int> dfs(vector<vector<int>>& adj) {
         // Code here
         int n = adj.size();
-        vector<int> vis(n,0);
         vector<int> ans;
-        dfs(adj,vis,ans,0);
+        vector<int> vis(n, 0);
+        for(int i = 0; i<n; i++) {
+            if(!vis[i]) {
+                solve(i, adj, vis, ans);
+            }
+        }
         return ans;
     }
 };
+
 
 //{ Driver Code Starts.
 
 int main() {
     int tc;
     cin >> tc;
+    cin.ignore();
     while (tc--) {
-        int V, E;
-        cin >> V >> E;
-
+        int V;
+        cin >> V;
+        cin.ignore();
         vector<vector<int>> adj(
             V); // Use vector of vectors instead of array of vectors.
 
-        for (int i = 0; i < E; i++) {
-            int u, v;
-            cin >> u >> v;
-            adj[u].push_back(v);
-            adj[v].push_back(u);
+        for (int i = 0; i < V; i++) {
+            string input;
+            getline(cin, input);
+            int num;
+            vector<int> node;
+            stringstream ss(input);
+            while (ss >> num) {
+                node.push_back(num);
+            }
+            adj[i] = node;
         }
 
         Solution obj;
-        vector<int> ans = obj.dfsOfGraph(adj);
+        vector<int> ans = obj.dfs(adj);
         for (int i = 0; i < ans.size(); i++) {
             cout << ans[i] << " ";
         }
