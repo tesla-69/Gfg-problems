@@ -7,42 +7,35 @@ using namespace std;
 // } Driver Code Ends
 
 class Solution {
-public:
+  public:
     vector<int> jobSequencing(vector<int> &deadline, vector<int> &profit) {
-        int n = deadline.size();
-        vector<pair<int, int>> jobs(n);
-
-        int maxDays = 0;
-        for (int i = 0; i < n; i++) {
-            jobs[i] = {profit[i], deadline[i]};
-            maxDays = max(maxDays, deadline[i]);
+        // code here
+        vector<vector<int>> arr;
+        int n = profit.size();
+        for(int i = 0;i<n; i++) {
+            arr.push_back({deadline[i], profit[i]});
         }
-
-        sort(jobs.rbegin(), jobs.rend()); // Sort jobs in decreasing order of profit
-
-        vector<int> parent(maxDays + 1);
-        for (int i = 0; i <= maxDays; i++) parent[i] = i; // Initialize disjoint set
-
-        // Disjoint Set Find Function with Path Compression
-        function<int(int)> find = [&](int day) {
-            if (parent[day] == day) return day;
-            return parent[day] = find(parent[day]);
-        };
-
-        int jobCount = 0, maxProfit = 0;
-
-        for (auto& job : jobs) {
-            int p = job.first, d = job.second;
-
-            int availableDay = find(d); // Find closest available day
-            if (availableDay > 0) {
-                parent[availableDay] = find(availableDay - 1); // Update parent (union)
-                jobCount++;
-                maxProfit += p;
+        sort(arr.begin(), arr.end());
+        // int mxdead = -1;
+        // for(int i = 0; i < n; i++) mxdead = max(mxdead, deadline[i]);
+        // vector<int> hash(mxdead+1,-1);
+        int jobs = 0;
+        int maxprofit = 0;
+        priority_queue<int, vector<int>, greater<int>> pq;
+        for(int i = 0; i < n; i++){
+            if(jobs < arr[i][0]) {
+                maxprofit += arr[i][1];
+                pq.push(arr[i][1]);
+                jobs++;
+            }
+            else if(arr[i][1] > pq.top()){
+                maxprofit -= pq.top();
+                pq.pop();
+                maxprofit += arr[i][1];
+                pq.push(arr[i][1]);
             }
         }
-
-        return {jobCount, maxProfit};
+        return {jobs, maxprofit};
     }
 };
 
