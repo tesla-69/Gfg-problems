@@ -4,6 +4,7 @@ using namespace std;
 
 
 // } Driver Code Ends
+
 class Solution {
   public:
     // Function to find minimum time required to rot all oranges.
@@ -49,6 +50,7 @@ class Solution {
         return tm;
     }
 };
+
 
 //{ Driver Code Starts.
 int main() {
