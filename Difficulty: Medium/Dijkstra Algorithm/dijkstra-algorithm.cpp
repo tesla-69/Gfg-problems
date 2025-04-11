@@ -8,35 +8,44 @@ using namespace std;
 // User Function Template
 class Solution {
   public:
-    // Function to find the shortest distance of all the vertices
-    // from the source vertex src.
-    vector<int> dijkstra(vector<vector<pair<int, int>>> &adj, int src) {
+    vector<int> dijkstra(int V, vector<vector<int>> &edges, int src) {
         // Code here
-        priority_queue<pair<int,int>, vector<pair<int,int>>, 
-        greater<pair<int,int>>> pq;
-        
-        int n = adj.size();
-        
-        vector<int> dist(n,1e9);
-        dist[src] = 0;
+        vector<vector<pair<int,int>>>v(V);
+        for(auto &x:edges){
+            v[x[0]].push_back({x[2],x[1]});
+            v[x[1]].push_back({x[2],x[0]});
+        }
+        vector<int>ans(V,INT_MAX);
+        priority_queue<pair<int,int>,vector<pair<int,int>>,greater<>>pq;
         pq.push({0,src});
-        while(!pq.empty()) {
-            auto it = pq.top();
+        ans[src]=0;
+        while(!pq.empty()){
+            auto x=pq.top();
+            int i=x.second;
+            int d=x.first;
             pq.pop();
-            int dis = it.first;
-            int node = it.second;
-            for(auto it : adj[node]) {
-                int adjnode = it.first;
-                int wt = it.second;
-                if(dis + wt < dist[adjnode]) {
-                    dist[adjnode] = dis + wt;
-                    pq.push({dist[adjnode], adjnode});
+            for(auto &y:v[i]){
+                if(ans[y.second]>y.first+d){
+                    ans[y.second]=y.first+d;
+                    pq.push({ans[y.second],y.second});
                 }
             }
         }
-        return dist;
+        return ans;
     }
 };
+// User Function Template
+// class Solution {
+//   public:
+//     // Function to find the shortest distance of all the vertices
+//     // from the source vertex src.
+//     vector<int> dijkstra(, int src) {
+//         // Code here
+//         // priority_queue<pair<int,int>, vector<pair<int,int>>, 
+//         // greater<pair<int,int>>> pq;
+        
+//     }
+// };
 
 
 
@@ -48,21 +57,20 @@ int main() {
     while (t--) {
         int V, E;
         cin >> V >> E;
-        vector<vector<pair<int, int>>> adj(V);
+        vector<vector<int>> edges;
         int i = 0;
         while (i++ < E) {
             int u, v, w;
             cin >> u >> v >> w;
-            pair<int, int> t1 = {v, w}, t2 = {u, w};
-            adj[u].push_back(t1);
-            adj[v].push_back(t2);
+            edges.push_back({u, v, w});
+            edges.push_back({v, u, w});
         }
         int src;
         cin >> src;
         cin.ignore();
 
         Solution obj;
-        vector<int> res = obj.dijkstra(adj, src);
+        vector<int> res = obj.dijkstra(V, edges, src);
 
         for (int i = 0; i < V; i++)
             cout << res[i] << " ";
