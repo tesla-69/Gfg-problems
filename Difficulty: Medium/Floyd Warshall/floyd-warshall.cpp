@@ -11,27 +11,16 @@ using namespace std;
 
 class Solution {
   public:
-    void shortestDistance(vector<vector<int>>& mat) {
+    void floydWarshall(vector<vector<int>> &dist) {
         // Code here
-        int n = mat.size();
-        int m = mat[0].size();
-        for(int i = 0 ;i < n ; i++) {
-            for(int j= 0; j<m; j++) {
-                if(mat[i][j] == -1) mat[i][j] = 1e9;
-                if(i == j) mat[i][j] = 0;
-            }
-        }
-        for(int k = 0 ; k < n; k++) {
-            for(int i =0; i< n ; i++ ){
-                for(int j = 0; j < n ; j++) {
-                    mat[i][j] = min(mat[i][j] , mat[i][k] + mat[k][j]);
+        int n = dist.size();
+        
+        for(int k = 0; k < n; k++) {
+            for(int i = 0; i < n; i++) {
+                for(int j = 0; j < n; j++) {
+                     if (dist[i][k] != 1e8 && dist[k][j] != 1e8)
+                    dist[i][j] = min(dist[i][j] , dist[i][k] + dist[k][j]);
                 }
-            }
-        }
-        for(int i = 0 ;i < n ; i++) {
-            for(int j= 0; j<m; j++) {
-                if(mat[i][j] == 1e9)
-                mat[i][j] = -1;
             }
         }
     }
@@ -52,7 +41,7 @@ int main() {
             }
         }
         Solution obj;
-        obj.shortestDistance(matrix);
+        obj.floydWarshall(matrix);
         for (int i = 0; i < n; i++) {
             for (int j = 0; j < n; j++) {
                 cout << matrix[i][j] << " ";
