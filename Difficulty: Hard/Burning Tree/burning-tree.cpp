@@ -12,77 +12,52 @@ class Node {
 };
 */
 class Solution {
-public:
-    map<Node*, Node*> parent;  // To store parent of each node
-    map<Node*, bool> vis;      // To keep track of visited nodes
-    Node* fireNode = nullptr;  // The node where fire starts
-
-    // Function to find parent of each node and locate the target node
-    void findParent(Node* root, int target) {
-        queue<Node*> q;
-        q.push(root);
-        parent[root] = nullptr;  // Root has no parent
-
-        while (!q.empty()) {
-            auto top = q.front(); q.pop();
-            
-            // If current node is the target, store it
-            if (top->data == target) {
-                fireNode = top;
-            }
-
-            // Store left child's parent and enqueue it
-            if (top->left) {
-                parent[top->left] = top;
-                q.push(top->left);
-            }
-
-            // Store right child's parent and enqueue it
-            if (top->right) {
-                parent[top->right] = top;
-                q.push(top->right);
-            }
-        }
+  public:
+  
+    Node* find(Node* root, int tar) {
+        if(root == NULL) return NULL;
+        if(root->data == tar) return root;
+        
+        Node* left = find(root->left, tar);
+        if(left) return left;
+        Node* right = find(root->right, tar);
+        if(right) return right;
+        return NULL;
     }
-
-    // Main function to compute minimum burning time
-    int minTime(Node* root, int target) {
-        // Step 1: Store parents and find the fireNode
-        findParent(root, target);
-
-        // Step 2: Perform BFS to simulate fire spread
-        queue<pair<Node*, int>> q;
-        q.push({fireNode, 0});  // Start from fireNode at time 0
-        vis[fireNode] = true;    // Mark as visited
-
-        int time = 0;  // To store the maximum time taken
-
-        while (!q.empty()) {
-            auto top = q.front(); q.pop();
-            Node* node = top.first;
-            int tt = top.second;
-
-            time = max(tt, time);  // Update maximum time
-
-            // Check left child if exists and not visited
-            if (node->left && !vis[node->left]) {
-                q.push({node->left, tt + 1});
-                vis[node->left] = true;
-            }
-
-            // Check right child if exists and not visited
-            if (node->right && !vis[node->right]) {
-                q.push({node->right, tt + 1});
-                vis[node->right] = true;
-            }
-
-            // Check parent if exists and not visited
-            if (parent[node] && !vis[parent[node]]) {
-                q.push({parent[node], tt + 1});
-                vis[parent[node]] = true;
-            }
+  
+    int h(Node* root) {
+        if(root == NULL) return 0;
+        int left = h(root->left);
+        int right = h(root->right);
+        
+        return 1 + max(left , right);
+    }
+  
+    int solve(Node* root, int &timer, int target) {
+        if(root == NULL) return 0;
+        if(root->data == target) return -1;
+        
+        int left = solve(root->left, timer, target);
+        int right = solve(root->right, timer,  target);
+        
+        if(left < 0) {
+            timer = max(timer, abs(left) + right);
+            return left - 1;
         }
-
-        return time;  // Final answer: minimum time to burn the tree
+        if(right < 0) {
+            timer = max(timer, (left) + abs(right));
+            return right - 1;
+        }
+        return 1 + max(left , right);
+    }
+  
+    int minTime(Node* root, int target) {
+        // code here
+        int timer = 0;
+        solve(root, timer, target);
+        Node* burn = find(root, target);
+        int height = h(burn)-1;
+        return max(height, timer);
+        
     }
 };
